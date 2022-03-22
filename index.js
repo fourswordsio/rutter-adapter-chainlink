@@ -5,17 +5,19 @@ const fetch = require('node-fetch');
 dotenv.config();
 
 const createRequest = async (input,callback) => {
-        let orderId = 'b0af4272-267a-4373-87c8-2051f3868bf0';
-        
-        if(input.data && input.data.endpoint){
-                orderId = input.data.endpoint;
+        let platform_order_id = 'b0af4272-267a-4373-87c8-2051f3868bf0';
+        let access_token = 'a8f539a2-cbfd-4a38-9ad2-af28f296eb35';
+  
+        if(input.data && input.data.endpoint && input.data.access){
+                platform_order_id = input.data.endpoint;
+                access_token = input.data.access;
         }
 
         let authHeaderCreds = new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64');
         console.log(authHeaderCreds);
 
         try{
-                let resp = await fetch(`${process.env.RUTTER_ORDER_URI}/${orderId}`, {
+                let resp = await fetch(`${process.env.RUTTER_ORDER_URI}/${platform_order_id}/$(access_token)`, {
                         method: 'GET',
                         headers: {
                                 'Authorization': `Basic ${authHeaderCreds}`,
