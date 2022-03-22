@@ -17,7 +17,7 @@ const createRequest = async (input,callback) => {
         console.log(authHeaderCreds);
 
         try{
-                let resp = await fetch(`${process.env.RUTTER_ORDER_URI}/${platform_order_id}/$(access_token)`, {
+                let resp = await fetch(`${process.env.RUTTER_ORDER_URI}/${platform_order_id}/$(access_token)`), {
                         method: 'GET',
                         headers: {
                                 'Authorization': `Basic ${authHeaderCreds}`,
