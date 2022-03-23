@@ -1,24 +1,30 @@
-                                                                                                                                                                                                                                                 
-const dotenv = require('dotenv');
-const fetch = require('node-fetch');
+const { Requester, Validator } = require('external-adapter')
 
-dotenv.config();
+const clientId = process.env.CLIENT_ID
+const clientSecret = process.env.CLIENT_SECRET
 
-const createRequest = async (input,callback) => {
+const customParams = {
+  orderID: true
+}
+
+const createRequest = (input, callback) => {
+  const validator = new Validator(input, customParams, callback)
+  const jobRunID = validator.validated.id
+  const orderId = validator.validated.data.orderId
+  const encodedAuth = Buffer.from(clientId + ':' + clientSecret)
+
+ 
+  const createRequest = async (input,callback) => {
         let orderId = 'b0af4272-267a-4373-87c8-2051f3868bf0';
         
         if(input.data && input.data.endpoint){
                 orderId = input.data.endpoint;
-        }
-
-        let authHeaderCreds = new Buffer.from(`${process.env.CLIENT_ID}:${process.env.CLIENT_SECRET}`).toString('base64');
-        console.log(authHeaderCreds);
 
         try{
-                let resp = await fetch(`${process.env.RUTTER_ORDER_URI}/${orderId}`, {
+                let resp = await fetch(`${process.env.RUTTER_ORDER_URI}/${orderId}?access_token=entertoken`, {
                         method: 'GET',
                         headers: {
-                                'Authorization': `Basic ${authHeaderCreds}`,
+                                'Authorization': `Basic ${encodedAuth}`,
                                 'Content-Type': 'application/json'
                         }
                 });
@@ -54,9 +60,7 @@ const createRequest = async (input,callback) => {
         request(options, (error, response, body) => {
                 // Add any API-specific failure case here to pass that error back to Chainlink
                 if (error || response.statusCode >= 400) {
-
                 } else {
-
                 }
         });
 */
